@@ -22,7 +22,7 @@
 		methods:{
 			toList:function(name,url){
 				let _name = encodeURI(name);
-				this.$router.push({'path':'/newsList?params='+_name+'&'+url})
+				this.$router.push({'path':'/newsList?params='+url+'&'+_name})
 			}
 		},
 	}

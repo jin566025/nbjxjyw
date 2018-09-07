@@ -20,12 +20,22 @@
 <script>
 	export default{
 		props:{
-			params:Object
+			params:Object,
+			default:function(){
+				return {"total":150,"pageSize":10}
+			},
+			pageSize : {
+				type : Number,
+				default : 10
+			},
+			total : {
+				type : Number,
+				default : 2
+			},
 		},
 		data(){
 			return {
-				total:100,
-				pageSize:10,
+				
 				currentPage:1,
 				totalPage:0,
 				currentPage2:1
@@ -33,15 +43,17 @@
 		},
 		mounted(){
 			let that = this;
-			this.$nextTick(function(){
-				that.init()
-			})
+			that.init()
 		},
 		watch:{
 			currentPage2:function(n,o){
 				n = parseInt(n)
-				this.currentPage2<this.totalPage ? this.currentPage=n : "";
+				this.currentPage2>this.totalPage ?   "":this.currentPage=n;
 				this.$emit('returnCurrent', this.currentPage)
+			},
+			total:function(val){
+				this.total = val || 1
+				this.totalPage = Math.ceil(val / this.pageSize);
 			}
 		},
 		computed:{
@@ -52,7 +64,6 @@
 				let arr;
 				let totalPage = this.totalPage;
 				let currentPage = this.currentPage
-		
 				if(totalPage>5){
 					if(currentPage>totalPage-5){
 						if(currentPage==totalPage-4){
@@ -77,10 +88,8 @@
 		},
 		methods:{
 			init:function(){
-				
-				this.total = this.params.total;
-				this.pageSize = this.params.pageSize;
-				this.totalPage = Math.ceil(this.params.total / this.params.pageSize);
+
+				this.totalPage = Math.ceil(this.total / this.pageSize);
 			},
 			changePage:function(index){
 				let _index = index;
@@ -90,23 +99,6 @@
 				}
 				
 			},
-// 			prev:function(){
-// 				let _currentPage = this.currentPage;
-// 				_currentPage>1 ? this.currentPage = _currentPage-1:''
-// 
-// 			},
-// 			next:function(){
-// 				let _currentPage = this.currentPage;
-// 				let _totalPage = this.totalPage;
-// 				_currentPage<_totalPage ? this.currentPage = _currentPage+1:''
-// 			},
-// 			first:function(){
-// 				this.currentPage = 1;
-// 			},
-// 			last:function(){
-// 				this.currentPage = this.totalPage;
-// 			},
-
 		},
 	}
 </script>

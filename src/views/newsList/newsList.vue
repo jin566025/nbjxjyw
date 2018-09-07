@@ -6,9 +6,9 @@
 			</div>
 		</div>
 		<div class="list-content">
-			<div class="list clearfix" v-for="(item,index) in newsList" :data-id="item.id" @click="toDetail(item.id)">
-				<div class="fl list-l">{{ item.title }}</div>
-				<div class="fr list-r">{{ item.time }}</div>
+			<div class="list clearfix" v-for="(item,index) in newsList" :data-id="item.id" @click="toDetail(item.infoPk)">
+				<div class="fl list-l">{{ item.nm }}</div>
+				<div class="fr list-r">{{ (item.updTm).substring(0,10) }}</div>
 			</div>
 
 			
@@ -22,7 +22,7 @@
 				  :total="1000">
 				</el-pagination>
 			</div> -->
-			<Pagination :params="params" @returnCurrent="changePage"></Pagination>
+			<Pagination :total="total" :pageSize="pageSize" @returnCurrent="changePage"></Pagination>
 			
 		</div>
 	</div>
@@ -30,28 +30,21 @@
 
 <script>
 	import Pagination from '@/components/pagination'
+	import { detailList } from '@/api/api'
   export default {
    
     data() {
       return {
-				params:{"total":150,"pageSize":10},
+				total:0,
+				pageSize:10,
         currentPage1: 5,
         currentPage2: 5,
         currentPage3: 5,
         currentPage4: 4,
-				newsList:[
-					{"title":"关于做好2018年市领军拔尖人才武汉大学主题研修班和北京成都深圳三地标杆企业“对标学习”研修班报名工作的通知研修班报名工作的通知研修班报名工作的通知","time":"2018-05-15","id":"1"},
-					{"title":"关于举办“海洋新兴产业与环境保护”国家级高级研修班的通知 ","time":"2018-05-15","id":"1"},
-					{"title":"关于做好2017年市领军拔尖人才浙大“一带一路”主题研修班和青岛深圳两地标杆企业“对标学习”研修班报名工作的通知 ","time":"2018-05-15","id":"1"},
-					{"title":"关于举办互联网+制造业企业转型高级研修班的通知","time":"2018-05-15","id":"1"},
-					{"title":"关于举办“全球化带给中国企业的启示”知识更新讲座的通知","time":"2018-05-15","id":"1"},
-					{"title":"关于做好2017年企业在职人员攻读研究生学费补贴有关工作的通知 ","time":"2018-05-15","id":"1"},
-					{"title":"关于印发宁波市2017年市级专业技术人员高级研修班计划的通知","time":"2018-05-15","id":"1"},
-					{"title":"关于印发宁波市专技人才知识更新工程2017年紧缺人才培训项目计划的通知","time":"2018-05-15","id":"1"},
-					{"title":"关于举办2016年专业技术人员知识更新讲座的通知（第11期）","time":"2018-05-15","id":"1"},
-					{"title":"关于举办宁波市群众文化系列专业技术人员知识更新讲座的通知","time":"2018-05-15","id":"1"},
-				],
-				title:""
+				newsList:[],
+				title:"",
+				currentIndex:1,
+				url:""
       };
     },
 		components:{
@@ -60,25 +53,60 @@
 		methods: {
 
 			getPrams:function(){
+
 				let _params = window.location.href.split("?params=")[1];
 				let params = _params.split("&")
-				let _title = decodeURI(params[0]);
-				let _url = params[1];
-				this.title = _title
+				let _title = decodeURI(params[1]);
+				let _url = params[0];
+				let url = "";
+				this.title = _title;
+				if(_url==1){//新闻热点
+					url = "/sys/news/page"
+				}else if(_url==2){//通知公告
+					url = "/jj/info/tzggPage"
+				}else if(_url==3){//政策法规
+					url = "/jj/info/zcfgPage"
+				}else if(_url==4){//内部通知
+					url = "/jj/info/nbggPage"
+				}else if(_url==5){//公司制度
+					url = "/jj/info/gszdPage"
+				}
+				this.url = url;
+				let query ={"w":[],"o":[],"p":{"n":this.currentIndex,"s":this.pageSize}};
+				query = JSON.stringify(query)
+				query = encodeURI(query);
+				url = url+"?query="+query;
+				
+				detailList(url).then((res)=>{
+					//console.log(res)
+					if(res.status==200){
+						this.newsList = res.data.data.items
+						this.total = res.data.page.total
+					}
+				})
 			},
 			toDetail:function(id){
 				let _title =encodeURI(this.title) ;
 				this.$router.push({'path':'/newsDetail?params='+id+'&'+_title})
 			},
 			changePage:function(val){
-				console.log(val)
+				let query ={"w":[],"o":[],"p":{"n":val,"s":this.pageSize}};
+				query = JSON.stringify(query)
+				query = encodeURI(query);
+				let url = this.url;
+				url = url+"?query="+query;
+				detailList(url).then((res)=>{
+					//console.log(res)
+					if(res.status==200){
+						this.newsList = res.data.data.items
+						this.total = res.data.page.total
+					}
+				})
 			}
 		},
 		mounted:function(){
 			let that = this;
-			this.$nextTick(function(){
-				that.getPrams()
-			})
+			that.getPrams()
 		}
   }
 </script>
@@ -87,14 +115,14 @@
 	.list{
 		width: 100%;font-family: Roboto;
 		.list-nav{
-			width: 100%;border-bottom: 1px solid #DCDCDC;height: 70px;
+			width: 100%;border-bottom: 1px solid #DCDCDC;height: 70px;background-color: #fff;
 			.list-nav-content{
 				width: 940px;margin: 0 auto;
 				.list-nav-title{color: #101010;font-size: 12px;text-align: center;width: 90px;height: 68px;line-height: 68px;border-bottom: 3px solid #F03C07;}
 			}
 		}
 		.list-content{
-			width: 920px;height: 600px;border: 1px solid #dcdcdc;margin: 0 auto;margin-bottom: 22px;padding: 10px;
+			width: 920px;height: 600px;border: 1px solid #dcdcdc;margin: 0 auto;margin-bottom: 22px;padding: 10px;background-color: #fff;
 			.list{
 				height: 52px;line-height: 52px;border-bottom: 1px dashed #4F4F4F ;font-size: 12px;color: #323232 ;
 				&:hover{cursor: pointer;background-color: #F5F6F7;}

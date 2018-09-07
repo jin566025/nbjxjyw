@@ -21,11 +21,11 @@
 <script>
 	export default{
 		props:{
-			bannerImg:Array
+			//bannerImg:Array
 		},
 		data(){
 			return {
-				//bannerImg:["./static/img/banner1.png","./static/img/banner2.png"],
+				bannerImg:["./static/img/banner1.jpg","./static/img/banner2.jpg"],
 				imgHeight:'100px'
 			}
 		},
@@ -54,7 +54,11 @@
 <style lang="less" rel="stylesheet/less" scoped>
 	.header-welcome{height: 42px;line-height: 42px;background-color: #0089FF ;font-family: Roboto;font-size: 12px;color: #fff;text-align: right;padding-right: 296px;}
 	// .banner-img{background-position: center;background-size: contain;background-repeat: no-repeat;}
-	.banner-imgs{width: 100%;display: block;}
+	.banner-imgs{width: 100%;image-rendering: -moz-crisp-edges; /* Firefox */
+    image-rendering: -o-crisp-edges; /* Opera */
+    image-rendering: -webkit-optimize-contrast; /* Webkit (non-standard naming) */
+    image-rendering: crisp-edges;
+    -ms-interpolation-mode: nearest-neighbor; /* IE (non-standard property) */}
 	.el-carousel__container:after{clear: both;content: " ";display: block;}
 	.el-carousel{height: 100%;}
 	.el-carousel__item h3 {
