@@ -1,7 +1,7 @@
 <template>
 	<div>
 		<div class="header-welcome">欢迎进入宁波舟山港集团继续教育网！！</div>
-		<el-carousel indicator-position="none" arrow="never" :interval="1500" :height="imgHeight">
+		<el-carousel indicator-position="none" arrow="never" :interval="5000" :height="imgHeight">
 <!-- 			<el-carousel-item class="banner-img" v-for="item in bannerImg" :key="item" :style="{backgroundImage:'url('+item+')'}"></el-carousel-item> -->
 			<el-carousel-item class="banner-img" v-for="item in bannerImg" :key="item">
 				<img ref="imgHeights" class="banner-imgs" :src="item" /> 
@@ -29,6 +29,7 @@
 				imgHeight:'100px'
 			}
 		},
+
 		mounted(){
 			let that = this;
 			window.addEventListener('resize', () => {
@@ -37,7 +38,7 @@
 			this.$nextTick(()=>{
 				setTimeout(()=>{
 					that.init()
-				},500)
+				},1000)
 			})
 			
 		},

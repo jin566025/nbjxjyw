@@ -4,8 +4,10 @@ import router from '@/router'
 const request = axios.create({
 	//baseURL: process.env.BASE_API,
 	//baseURL:"http://21w5499t90.iask.in:13514/api/",
-	baseURL:"api",
-	
+	// baseURL:"api",
+	//baseURL:"api",
+	baseURL:"http://v1783y3356.iask.in:11090",
+	// baseURL:"http://127.0.0.1",
 })
 
 

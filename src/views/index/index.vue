@@ -17,7 +17,7 @@
 						</div>
 						<div class="news-top-right fr">
 							<p class="news-title">{{ newslist[0].nm }}</p>
-							<p class="news-text"><span v-html="newslist[0].cont"></span></p>
+							<p class="news-text"  v-html="newslist[0].cont" style="height: 80px;"></p>
 							<p class="fr"><span class="detail" @click="toDetail(newslist[0].sysNewsPk,newslist[0].catNm,'aa')">[详情]</span></p>
 						</div>
 					</div>
@@ -113,11 +113,11 @@
   			loginFlag:true,
 				textDetail:"",
 				more:[
-					{"name":"新闻热点","img":"../../static/img/icon2.png","url":"1"},
-					{"name":"通知公告","img":"../../static/img/icon3.png","url":"2"},
-					{"name":"政策法规","img":"../../static/img/icon4.png","url":"3"},
-					{"name":"内部通知","img":"../../static/img/icon5.png","url":"4"},
-					{"name":"公司制度","img":"../../static/img/icon6.png","url":"5"}
+					{"name":"新闻热点","img":"./static/img/icon2.png","url":"1"},
+					{"name":"通知公告","img":"./static/img/icon3.png","url":"2"},
+					{"name":"政策法规","img":"./static/img/icon4.png","url":"3"},
+					{"name":"内部通知","img":"./static/img/icon5.png","url":"4"},
+					{"name":"公司制度","img":"./static/img/icon6.png","url":"5"}
 				],
 				gszdlist:[{"nm":"","updTm":"","imgUrl":"","cont":""}],
 				nbgglist:[{"nm":"","updTm":"","imgUrl":"","cont":""}],
@@ -133,11 +133,13 @@
 
 		mounted(){
 			this.$nextTick(()=>{
-				this.nbggList();
-				this.gszdList();
+				this.newsList();
 				this.tzggList();
 				this.zcfgList();
-				this.newsList();
+				this.nbggList();
+				this.gszdList();
+				
+				
 			})
 			
 		},
